@@ -1,0 +1,15 @@
+Household
+- Have 3 resources
+    - Land
+    - Labour
+    - Capital
+- Sell resources for income to the firms
+- They use income to purchase goods and services from firms
+- The success of a household is measured by the amount of goods and services
+
+Firms
+- Start with set amount of money
+- Use money to purchase resources
+- If 1 of each resource is owned, trade for goods and service
+- They can sell their goods and services for money
+- The success of a firm is measured by the amount of profit they have gained or lost
