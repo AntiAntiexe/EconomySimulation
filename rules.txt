@@ -1,6 +1,6 @@
 Household
 - Have 3 resources
-    - Land
+    - Land ->
     - Labour
     - Capital
 - Sell resources for income to the firms
