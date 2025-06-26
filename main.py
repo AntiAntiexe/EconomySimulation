@@ -90,7 +90,9 @@ class Simulation:
                         firm.capital += 1
         
         for firm in self.firms:
-            
-                
+            if firm.land > 0 and firm.labour > 0 and firm.capital > 0:
+                firm.goods += 1
+                firm.land -= 1
+                firm.labour -= 1
+                firm.capital -= 1
 
-        
