@@ -202,6 +202,9 @@ mainApp.createHouseholds()
 mainApp.createFirms()
 
 simulation = Simulation(mainApp.households, mainApp.firms)
+
+mainApp.writeHeaders()
+
 for day in range(360):
     simulation.step()
     print(f'Day {day +1}:')
