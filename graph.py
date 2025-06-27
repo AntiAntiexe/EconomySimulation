@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 firmData = pd.read_csv('firms.csv')
-householdData = pd.read_csv('households.csv')
+
 
 figure, axis = plt.subplots(2, 2)
 
@@ -23,3 +23,5 @@ axis[1, 1].set_title("Firm Land Over Time")
 axis[1, 1].legend()
 
 plt.show()
+
+
