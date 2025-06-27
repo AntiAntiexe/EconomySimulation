@@ -1,4 +1,5 @@
 import random
+import csv
 
 
 class HouseHold:
@@ -164,6 +165,35 @@ class App:
             bias = random.uniform(1.0, 5.0)
             goodsBias = random.uniform(1.0, 2.0)
             self.firms.append(Firm(money, wage, negotiationVal, bias, goodsBias))
+
+    def saveHouseholds(self, day, income, goods, land, labour, capital):
+        data = {'Day': day, 'Income': income, 'Goods': goods, 'Land': land, 'Labour': labour, 'Capital': capital}
+
+        with open('households.csv', 'a', newline='') as csvfile:
+            fieldnames = ['Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writerow(data)
+
+    def saveFirms(self, day, money, goods, goodsPrice, land, labour, capital):
+        data = {'Day': day, 'Money': money, 'Goods': goods, 'GoodsPrice': goodsPrice, 'Land': land, 'Labour': labour, 'Capital': capital}
+
+        with open('firms.csv', 'a', newline='') as csvfile:
+            fieldnames = ['Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writerow(data)
+    
+    def writeHeaders(self):
+        with open('households.csv', 'w', newline='') as csvfile:
+            fieldnames = ['Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+
+        with open('firms.csv', 'w', newline='') as csvfile:
+            fieldnames = ['Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
 
 
 
