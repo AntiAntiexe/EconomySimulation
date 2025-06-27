@@ -1,5 +1,11 @@
 import random
 import csv
+import sys
+old_stdout = sys.stdout
+
+log_file = open("output.log","w")
+
+sys.stdout = log_file
 
 
 class HouseHold:
@@ -119,6 +125,12 @@ class Simulation:
                 firm.labour -= 1
                 firm.capital -= 1
 
+        print(f'Day {day +1}:')
+        for i, household in enumerate(self.households):
+            print(f'Household {i + 1}: Income: {household.income}, Goods: {household.goods}, Land: {household.land}, Labour: {household.labour}, Capital: {household.capital}')
+        for i, firm in enumerate(self.firms):
+            print(f'Firm {i + 1}: Money: {firm.money}, Goods: {firm.goods}, Land: {firm.land}, Labour: {firm.labour}, Capital: {firm.capital}, Goods Price: {firm.goodsP}')
+
         for firm in self.firms:
             for household in self.households:
                 if firm.goods > 0 and household.income >= firm.goodsP:
@@ -208,14 +220,13 @@ mainApp.writeHeaders()
 for day in range(360):
     simulation.step()
     
-    print(f'Day {day +1}:')
-    for i, household in enumerate(simulation.households):
-        print(f'Household {i + 1}: Income: {household.income}, Goods: {household.goods}, Land: {household.land}, Labour: {household.labour}, Capital: {household.capital}')
-    for i, firm in enumerate(simulation.firms):
-        print(f'Firm {i + 1}: Money: {firm.money}, Goods: {firm.goods}, Land: {firm.land}, Labour: {firm.labour}, Capital: {firm.capital}, Goods Price: {firm.goodsP}')
+    
     
     mainApp.saveHouseholds(day + 1, simulation.households[0].income, simulation.households[0].goods, simulation.households[0].land, simulation.households[0].labour, simulation.households[0].capital)
 
     mainApp.saveFirms(day + 1, simulation.firms[0].money, simulation.firms[0].goods, simulation.firms[0].goodsP, simulation.firms[0].land, simulation.firms[0].labour, simulation.firms[0].capital)
 
     print('---')
+
+sys.stdout = old_stdout
+log_file.close()
