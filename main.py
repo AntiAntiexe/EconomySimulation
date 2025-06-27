@@ -121,7 +121,7 @@ class Simulation:
 
         for firm in self.firms:
             for household in self.households:
-                if firm.goods > 0:
+                if firm.goods > 0 and household.income >= firm.goodsP:
                     if household.negotiation_value > firm.negotiation_value:
                         firm.money += (firm.goodsP - household.bias)
                         household.income -= (firm.goodsP - household.bias)
@@ -207,9 +207,15 @@ mainApp.writeHeaders()
 
 for day in range(360):
     simulation.step()
+    
     print(f'Day {day +1}:')
     for i, household in enumerate(simulation.households):
         print(f'Household {i + 1}: Income: {household.income}, Goods: {household.goods}, Land: {household.land}, Labour: {household.labour}, Capital: {household.capital}')
     for i, firm in enumerate(simulation.firms):
         print(f'Firm {i + 1}: Money: {firm.money}, Goods: {firm.goods}, Land: {firm.land}, Labour: {firm.labour}, Capital: {firm.capital}, Goods Price: {firm.goodsP}')
+    
+    mainApp.saveHouseholds(day + 1, simulation.households[0].income, simulation.households[0].goods, simulation.households[0].land, simulation.households[0].labour, simulation.households[0].capital)
+
+    mainApp.saveFirms(day + 1, simulation.firms[0].money, simulation.firms[0].goods, simulation.firms[0].goodsP, simulation.firms[0].land, simulation.firms[0].labour, simulation.firms[0].capital)
+
     print('---')
