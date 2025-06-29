@@ -119,7 +119,8 @@ class Simulation:
 
         
         for firm in self.firms:
-            if firm.land > 0 and firm.labour > 0 and firm.capital > 0:
+            while firm.land >0 and firm.labour > 0 and firm.capital > 0:
+                print('producing')
                 firm.goods += 1
                 firm.land -= 1
                 firm.labour -= 1
@@ -139,6 +140,7 @@ class Simulation:
                         household.income -= (firm.goodsP - household.bias)
                         household.goods += 1
                         firm.goods -= 1
+                        print('sold')
                     elif household.negotiation_value < firm.negotiation_value:
                         firm.money += (firm.goodsP + firm.bias)
                         household.income -= (firm.goodsP + firm.bias)
@@ -226,7 +228,7 @@ for day in range(360):
 
     mainApp.saveFirms(day + 1, simulation.firms[0].money, simulation.firms[0].goods, simulation.firms[0].goodsP, simulation.firms[0].land, simulation.firms[0].labour, simulation.firms[0].capital)
 
-    print('---')
+    #print('---')
 
 sys.stdout = old_stdout
 log_file.close()
