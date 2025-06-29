@@ -18,7 +18,7 @@ axis[1, 0].set_title("Firm Goods Price Over Time")
 axis[1, 1].plot(firmData['Day'], firmData['Land'], label='Land')
 axis[1, 1].plot(firmData['Day'], firmData['Labour'], label='Labour')
 axis[1, 1].plot(firmData['Day'], firmData['Capital'], label='Capital')
-axis[1, 1].set_title("Firm Land Over Time")
+axis[1, 1].set_title("Firm Resources Over Time")
 
 axis[1, 1].legend()
 
