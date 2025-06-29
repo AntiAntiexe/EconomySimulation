@@ -222,13 +222,11 @@ mainApp.writeHeaders()
 for day in range(360):
     simulation.step()
     
-    
-    
     mainApp.saveHouseholds(day + 1, simulation.households[0].income, simulation.households[0].goods, simulation.households[0].land, simulation.households[0].labour, simulation.households[0].capital)
 
     mainApp.saveFirms(day + 1, simulation.firms[0].money, simulation.firms[0].goods, simulation.firms[0].goodsP, simulation.firms[0].land, simulation.firms[0].labour, simulation.firms[0].capital)
 
-    #print('---')
+    print('---')
 
 sys.stdout = old_stdout
 log_file.close()
