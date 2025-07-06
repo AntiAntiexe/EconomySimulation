@@ -161,11 +161,11 @@ class App:
 
     def createHouseholds(self):
         for i in range(self.numberOfHouseholds):
-            land = random.randint(1000, 10000)
+            land = random.randint(1000, 1000)
             landPrice = random.uniform(1.0, 10.0)
-            labour = random.randint(1000, 10000)
+            labour = random.randint(1000, 1000)
             labourPrice = random.uniform(1.0, 10.0)
-            capital = random.randint(1000, 10000)
+            capital = random.randint(1000, 1000)
             capitalPrice = random.uniform(1.0, 10.0)
             negotiationVal = random.uniform(1.0, 10.0)
             bias = random.uniform(1.0, 5.0)
@@ -177,7 +177,7 @@ class App:
             wage = random.uniform(1.0, 10.0)
             negotiationVal = random.uniform(1.0, 10.0)
             bias = random.uniform(1.0, 5.0)
-            goodsBias = random.uniform(1.0, 2.0)
+            goodsBias = random.uniform(1.0, 10.0)
             self.firms.append(Firm(money, wage, negotiationVal, bias, goodsBias))
 
     def saveHouseholds(self, day, income, goods, land, labour, capital):
