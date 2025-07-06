@@ -161,11 +161,11 @@ class App:
 
     def createHouseholds(self):
         for i in range(self.numberOfHouseholds):
-            land = random.randint(1000, 1000)
+            land = random.randint(1000, 10000)
             landPrice = random.uniform(1.0, 10.0)
-            labour = random.randint(1000, 1000)
+            labour = random.randint(1000, 10000)
             labourPrice = random.uniform(1.0, 10.0)
-            capital = random.randint(1000, 1000)
+            capital = random.randint(1000, 10000)
             capitalPrice = random.uniform(1.0, 10.0)
             negotiationVal = random.uniform(1.0, 10.0)
             bias = random.uniform(1.0, 5.0)
