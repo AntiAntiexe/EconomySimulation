@@ -50,5 +50,10 @@ axis[1, 1].set_title("Firm Resources Over Time")
 axis[1, 1].legend()
 
 plt.show()
+'''
+
+
+
+
 
 
