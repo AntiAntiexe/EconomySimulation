@@ -9,7 +9,7 @@ sys.stdout = log_file
 
 
 class HouseHold:
-    def __init__(self, Land: int, LandPrice: float, Labour: int, LabourPrice: float, Capital: int, CapitalPrice: float, NegotiationVal: float, Bias: float):
+    def __init__(self, name: str, Land: int, LandPrice: float, Labour: int, LabourPrice: float, Capital: int, CapitalPrice: float, NegotiationVal: float, Bias: float):
         self.land_price = LandPrice
         self.labour_price = LabourPrice
         self.capital_price = CapitalPrice
@@ -20,9 +20,10 @@ class HouseHold:
         self.capital = Capital
         self.income = 0
         self.goods = 0
+        self.name = name
     
 class Firm:
-    def __init__(self, Money: float, Wage: float, NegotiationVal: float, Bias: float, goodsBias: float):
+    def __init__(self, name: str, Money: float, Wage: float, NegotiationVal: float, Bias: float, goodsBias: float):
         self.goodsBias = goodsBias
         self.bias = Bias
         self.negotiation_value = NegotiationVal
@@ -37,6 +38,8 @@ class Firm:
         self.land_price = 0.0
         self.labour_price = 0.0
         self.capital_price = 0.0
+
+        self.name = name
     
     def goodsPrice(self, landPrice: float, labourPrice: float, capitalPrice: float):
         self.goodsP = landPrice + labourPrice + capitalPrice + self.goodsBias
@@ -169,7 +172,8 @@ class App:
             capitalPrice = random.uniform(1.0, 10.0)
             negotiationVal = random.uniform(1.0, 10.0)
             bias = random.uniform(1.0, 5.0)
-            self.households.append(HouseHold(land, landPrice, labour, labourPrice, capital, capitalPrice, negotiationVal, bias))
+            name = f'Household{i + 1}'
+            self.households.append(HouseHold(name, land, landPrice, labour, labourPrice, capital, capitalPrice, negotiationVal, bias))
 
     def createFirms(self):
         for i in range(self.numberOfFirms):
@@ -178,34 +182,35 @@ class App:
             negotiationVal = random.uniform(1.0, 10.0)
             bias = random.uniform(1.0, 5.0)
             goodsBias = random.uniform(1.0, 10.0)
-            self.firms.append(Firm(money, wage, negotiationVal, bias, goodsBias))
+            name = f'Firm{i + 1}'
+            self.firms.append(Firm(name, money, wage, negotiationVal, bias, goodsBias))
 
-    def saveHouseholds(self, day, income, goods, land, labour, capital):
-        data = {'Day': day, 'Income': income, 'Goods': goods, 'Land': land, 'Labour': labour, 'Capital': capital}
+    def saveHouseholds(self, dataSet, day, income, goods, land, labour, capital):
+        data = {'DataSet': dataSet, 'Day': day, 'Income': income, 'Goods': goods, 'Land': land, 'Labour': labour, 'Capital': capital}
 
         with open('data/households.csv', 'a', newline='') as csvfile:
-            fieldnames = ['Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
+            fieldnames = ['DataSet', 'Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writerow(data)
 
-    def saveFirms(self, day, money, goods, goodsPrice, land, labour, capital):
-        data = {'Day': day, 'Money': money, 'Goods': goods, 'GoodsPrice': goodsPrice, 'Land': land, 'Labour': labour, 'Capital': capital}
+    def saveFirms(self, dataSet, day, money, goods, goodsPrice, land, labour, capital):
+        data = {'DataSet': dataSet,'Day': day, 'Money': money, 'Goods': goods, 'GoodsPrice': goodsPrice, 'Land': land, 'Labour': labour, 'Capital': capital}
 
         with open('data/firms.csv', 'a', newline='') as csvfile:
-            fieldnames = ['Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
+            fieldnames = ['DataSet', 'Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writerow(data)
     
     def writeHeaders(self):
         with open('data/households.csv', 'w', newline='') as csvfile:
-            fieldnames = ['Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
+            fieldnames = ['DataSet', 'Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
         with open('data/firms.csv', 'w', newline='') as csvfile:
-            fieldnames = ['Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
+            fieldnames = ['DataSet', 'Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -221,11 +226,12 @@ mainApp.writeHeaders()
 
 for day in range(360):
     simulation.step()
+
+    for i, household in enumerate(simulation.households):
+        mainApp.saveHouseholds(simulation.households[i].name, day + 1, simulation.households[i].income, simulation.households[i].goods, simulation.households[i].land, simulation.households[i].labour, simulation.households[i].capital)
+    for i, firm in enumerate(simulation.firms):
+        mainApp.saveFirms(simulation.firms[i].name, day + 1, simulation.firms[i].money, simulation.firms[i].goods, simulation.firms[i].goodsP, simulation.firms[i].land, simulation.firms[i].labour, simulation.firms[i].capital)
     
-    mainApp.saveHouseholds(day + 1, simulation.households[0].income, simulation.households[0].goods, simulation.households[0].land, simulation.households[0].labour, simulation.households[0].capital)
-
-    mainApp.saveFirms(day + 1, simulation.firms[0].money, simulation.firms[0].goods, simulation.firms[0].goodsP, simulation.firms[0].land, simulation.firms[0].labour, simulation.firms[0].capital)
-
     print('---')
 
 sys.stdout = old_stdout
