@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-householdData = pd.read_csv('households.csv')
+householdData = pd.read_csv('data/households.csv')
 
 figure, axis = plt.subplots(3)
 

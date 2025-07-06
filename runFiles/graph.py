@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-firmData = pd.read_csv('firms.csv')
+firmData = pd.read_csv('data/firms.csv')
 
 
 figure, axis = plt.subplots(2, 2)

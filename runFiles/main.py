@@ -183,7 +183,7 @@ class App:
     def saveHouseholds(self, day, income, goods, land, labour, capital):
         data = {'Day': day, 'Income': income, 'Goods': goods, 'Land': land, 'Labour': labour, 'Capital': capital}
 
-        with open('households.csv', 'a', newline='') as csvfile:
+        with open('data/households.csv', 'a', newline='') as csvfile:
             fieldnames = ['Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -192,19 +192,19 @@ class App:
     def saveFirms(self, day, money, goods, goodsPrice, land, labour, capital):
         data = {'Day': day, 'Money': money, 'Goods': goods, 'GoodsPrice': goodsPrice, 'Land': land, 'Labour': labour, 'Capital': capital}
 
-        with open('firms.csv', 'a', newline='') as csvfile:
+        with open('data/firms.csv', 'a', newline='') as csvfile:
             fieldnames = ['Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writerow(data)
     
     def writeHeaders(self):
-        with open('households.csv', 'w', newline='') as csvfile:
+        with open('data/households.csv', 'w', newline='') as csvfile:
             fieldnames = ['Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
-        with open('firms.csv', 'w', newline='') as csvfile:
+        with open('data/firms.csv', 'w', newline='') as csvfile:
             fieldnames = ['Day', 'Money', 'Goods', 'GoodsPrice', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
