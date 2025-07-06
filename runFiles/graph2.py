@@ -1,9 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
+'''
 householdData = pd.read_csv('data/households.csv')
 
-figure, axis = plt.subplots(3)
+figure, axis = plt.subplots(2, 3)
 
 figure.tight_layout(pad=3.0)
 
