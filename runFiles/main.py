@@ -216,7 +216,7 @@ class App:
 
 
 
-mainApp = App(10, 100, 360)
+mainApp = App(10, 10, 360)
 mainApp.createHouseholds()
 mainApp.createFirms()
 
