@@ -21,6 +21,7 @@ class HouseHold:
         self.income = 0
         self.goods = 0
         self.name = name
+        
     
 class Firm:
     def __init__(self, name: str, Money: float, Wage: float, NegotiationVal: float, Bias: float, goodsBias: float):
@@ -48,14 +49,102 @@ class Firm:
 
 
 class Simulation:
-    def __init__(self, Households: list, Firms: list):
+    def __init__(self, Households: list, Firms: list, nHouseholds: int, nFirms: int):
         self.households = Households
         self.firms = Firms
+        self.nHouseholds = nHouseholds
+        self.nFirms = nFirms
         self.time = 0
+        
+        
 
     def step(self):
         self.time += 1
+        householdExclude = []
+        firmExclude = []
+        #print(nhouseholds)
+        self.nhouseholdsList = list(range(0,self.nHouseholds))
+        self.nfirmsList = list(range(0,self.nFirms))
+        
+        print('__')
+        
+        
+        for i in range(self.nHouseholds):
+            print(self.nhouseholdsList)
+            #print(self.nHouseholds)
+            #print(self.nFirms)
+            #household = random.choice([j for j in range(0,self.nHouseholds-1) if j not in householdExclude])
+            household = random.choice(self.nhouseholdsList)
+            #firm = random.choice([k for k in range(0,self.nFirms-1) if k not in firmExclude])
+            firm = random.choice(self.nfirmsList)
 
+            self.nhouseholdsList.remove(household)
+            self.nfirmsList.remove(firm)
+            #householdExclude.append(household)
+            #firmExclude.append(firm)
+            
+            if self.households[household].land > 0:
+                if self.households[household].negotiation_value > self.firms[firm].negotiation_value:
+                    self.households[household].income += (self.firms[firm].wage + self.households[household].bias)
+                    self.households[household].land -= 1
+                    self.firms[firm].money -= (self.firms[firm].wage + self.households[household].bias)
+                    self.firms[firm].land_price = self.firms[firm].wage + self.households[household].bias
+                    self.firms[firm].land += 1
+                elif self.households[household].negotiation_value < self.firms[firm].negotiation_value:
+                    self.households[household].income += (self.firms[firm].wage - self.firms[firm].bias)
+                    self.households[household].land -= 1
+                    self.firms[firm].money -= (self.firms[firm].wage - self.firms[firm].bias)
+                    self.firms[firm].land_price = self.firms[firm].wage - self.firms[firm].bias
+                    self.firms[firm].land += 1
+                elif self.households[household].negotiation_value == self.firms[firm].negotiation_value:
+                    self.households[household].income += self.firms[firm].wage
+                    self.households[household].land -= 1
+                    self.firms[firm].money -= self.firms[firm].wage
+                    self.firms[firm].land_price = self.firms[firm].wage
+                    self.firms[firm].land += 1
+                    
+            if self.households[household].labour > 0:
+                if self.households[household].negotiation_value > self.firms[firm].negotiation_value:
+                    self.households[household].income += (self.firms[firm].wage + self.households[household].bias)
+                    self.households[household].labour -= 1
+                    self.firms[firm].money -= (self.firms[firm].wage + self.households[household].bias)
+                    self.firms[firm].labour_price = self.firms[firm].wage + self.households[household].bias
+                    self.firms[firm].labour += 1
+                elif self.households[household].negotiation_value < self.firms[firm].negotiation_value:
+                    self.households[household].income += (self.firms[firm].wage - self.firms[firm].bias)
+                    self.households[household].labour -= 1
+                    self.firms[firm].money -= (self.firms[firm].wage - self.firms[firm].bias)
+                    self.firms[firm].labour_price = self.firms[firm].wage - self.firms[firm].bias
+                    self.firms[firm].labour += 1
+                elif self.households[household].negotiation_value == self.firms[firm].negotiation_value:
+                    self.households[household].income += self.firms[firm].wage
+                    self.households[household].labour -= 1
+                    self.firms[firm].money -= self.firms[firm].wage
+                    self.firms[firm].labour_price = self.firms[firm].wage
+                    self.firms[firm].labour += 1
+
+            if self.households[household].capital > 0:
+                if self.households[household].negotiation_value > self.firms[firm].negotiation_value:
+                    self.households[household].income += (self.firms[firm].wage + self.households[household].bias)
+                    self.households[household].capital -= 1
+                    self.firms[firm].money -= (self.firms[firm].wage + self.households[household].bias)
+                    self.firms[firm].capital_price = self.firms[firm].wage + self.households[household].bias
+                    self.firms[firm].capital += 1
+                elif self.households[household].negotiation_value < self.firms[firm].negotiation_value:
+                    self.households[household].income += (self.firms[firm].wage - self.firms[firm].bias)
+                    self.households[household].capital -= 1
+                    self.firms[firm].money -= (self.firms[firm].wage - self.firms[firm].bias)
+                    self.firms[firm].capital_price = self.firms[firm].wage - self.firms[firm].bias
+                    self.firms[firm].capital += 1
+                elif self.households[household].negotiation_value == self.firms[firm].negotiation_value:
+                    self.households[household].income += self.firms[firm].wage
+                    self.households[household].capital -= 1
+                    self.firms[firm].money -= self.firms[firm].wage
+                    self.firms[firm].capital_price = self.firms[firm].wage
+                    self.firms[firm].capital += 1
+
+            self.firms[firm].goodsPrice(self.firms[firm].land_price, self.firms[firm].labour_price, self.firms[firm].capital_price)
+        '''
         for household in self.households:
             for firm in self.firms:
                 if household.land > 0:
@@ -119,6 +208,8 @@ class Simulation:
                         firm.capital += 1
 
                 firm.goodsPrice(firm.land_price, firm.labour_price, firm.capital_price)
+        '''
+        
 
         
         for firm in self.firms:
@@ -134,7 +225,50 @@ class Simulation:
             print(f'Household {i + 1}: Income: {household.income}, Goods: {household.goods}, Land: {household.land}, Labour: {household.labour}, Capital: {household.capital}')
         for i, firm in enumerate(self.firms):
             print(f'Firm {i + 1}: Money: {firm.money}, Goods: {firm.goods}, Land: {firm.land}, Labour: {firm.labour}, Capital: {firm.capital}, Goods Price: {firm.goodsP}')
+        
+        
+        self.nhouseholdsList = list(range(0,self.nHouseholds))
+        self.nfirmsList = list(range(0,self.nFirms))
+        print('Self.nfirms: ', self.nFirms)
+        
+        for i in range(self.nFirms):
+            print(self.nhouseholdsList)
+            #household = random.choice([j for j in range(0,self.nHouseholds - 1) if j not in householdExclude])
+            #firm = random.choice([k for k in range(0,self.nFirms - 1) if k not in firmExclude])
+            
+            #householdExclude.append(household)
+            #firmExclude.append(firm)
+            print('^^^') 
+            household = random.choice(self.nhouseholdsList)
+            #firm = random.choice([k for k in range(0,self.nFirms-1) if k not in firmExclude])
+            firm = random.choice(self.nfirmsList)
 
+            self.nhouseholdsList.remove(household)
+            self.nfirmsList.remove(firm)
+
+
+            if self.firms[firm].goods > 0 and self.households[household].income >= self.firms[firm].goodsP:
+                    if self.households[household].negotiation_value > self.firms[firm].negotiation_value:
+                        self.firms[firm].money += (self.firms[firm].goodsP - self.households[household].bias)
+                        self.households[household].income -= (self.firms[firm].goodsP - self.households[household].bias)
+                        self.households[household].goods += 1
+                        self.firms[firm].goods -= 1
+                        print('sold')
+                    elif self.households[household].negotiation_value < self.firms[firm].negotiation_value:
+                        self.firms[firm].money += (self.firms[firm].goodsP + self.firms[firm].bias)
+                        self.households[household].income -= (self.firms[firm].goodsP + self.firms[firm].bias)
+                        self.households[household].goods += 1
+                        self.firms[firm].goods -= 1
+                    elif self.households[household].negotiation_value == self.firms[firm].negotiation_value:
+                        self.firms[firm].money += self.firms[firm].goodsP
+                        self.households[household].income -= self.firms[firm].goodsP
+                        self.households[household].goods += 1
+                        self.firms[firm].goods -= 1
+
+
+
+            
+        ''' 
         for firm in self.firms:
             for household in self.households:
                 if firm.goods > 0 and household.income >= firm.goodsP:
@@ -154,7 +288,7 @@ class Simulation:
                         household.income -= firm.goodsP
                         household.goods += 1
                         firm.goods -= 1
-                
+                '''
 class App:
     def __init__(self, numberOfFirms: int, numberOfHouseholds: int, days: int):
         self.households = []
@@ -215,12 +349,13 @@ class App:
             writer.writeheader()
 
 
-
-mainApp = App(10, 10, 360)
+nhouseholds = 10
+nfirms = 10
+mainApp = App(nfirms, nhouseholds, 360)
 mainApp.createHouseholds()
 mainApp.createFirms()
 
-simulation = Simulation(mainApp.households, mainApp.firms)
+simulation = Simulation(mainApp.households, mainApp.firms, nhouseholds, nfirms)
 
 mainApp.writeHeaders()
 
