@@ -1,6 +1,6 @@
 Household
 - Have 3 resources
-    - Land ->
+    - Land 
     - Labour
     - Capital
 - Sell resources for income to the firms
@@ -13,3 +13,7 @@ Firms
 - If 1 of each resource is owned, trade for goods and service
 - They can sell their goods and services for money
 - The success of a firm is measured by the amount of profit they have gained or lost
+
+
+
+A household and a firm is randomly selected and their trades are negotiated.
