@@ -18,4 +18,6 @@ for i in range(10):
     nhouseholdsList.remove(randHouse)
     print('---')
     
+def randomHousehold(nhouseholds, exclude):
+    
     
