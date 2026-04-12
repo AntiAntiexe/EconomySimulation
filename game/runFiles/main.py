@@ -7,6 +7,11 @@ log_file = open("output.log","w")
 
 sys.stdout = log_file
 
+class Government:
+    def __init__(self, taxRate: float):
+        self.tax_rate = taxRate
+        
+        self.tax_revenue = 0.0
 
 class HouseHold:
     def __init__(self, name: str, Land: int, LandPrice: float, Labour: int, LabourPrice: float, Capital: int, CapitalPrice: float, NegotiationVal: float, Bias: float):
@@ -48,9 +53,10 @@ class Firm:
 
 
 class Simulation:
-    def __init__(self, Households: list, Firms: list):
+    def __init__(self, Households: list, Firms: list, Government: Government):
         self.households = Households
         self.firms = Firms
+        self.government = Government
         self.time = 0
 
     def step(self):
@@ -128,12 +134,16 @@ class Simulation:
                 firm.land -= 1
                 firm.labour -= 1
                 firm.capital -= 1
+                firm.money -= self.government.tax_rate
+                self.government.tax_revenue += self.government.tax_rate
 
         print(f'Day {day +1}:')
         for i, household in enumerate(self.households):
             print(f'Household {i + 1}: Income: {household.income}, Goods: {household.goods}, Land: {household.land}, Labour: {household.labour}, Capital: {household.capital}')
         for i, firm in enumerate(self.firms):
             print(f'Firm {i + 1}: Money: {firm.money}, Goods: {firm.goods}, Land: {firm.land}, Labour: {firm.labour}, Capital: {firm.capital}, Goods Price: {firm.goodsP}')
+            
+        print(f'Government: Tax Rate: {self.government.tax_rate}, Tax Revenue: {self.government.tax_revenue}')
 
         for firm in self.firms:
             for household in self.households:
@@ -156,11 +166,14 @@ class Simulation:
                         firm.goods -= 1
                 
 class App:
-    def __init__(self, numberOfFirms: int, numberOfHouseholds: int, days: int):
+    def __init__(self, numberOfFirms: int, numberOfHouseholds: int):
         self.households = []
         self.firms = []
         self.numberOfFirms = numberOfFirms
         self.numberOfHouseholds = numberOfHouseholds
+        
+    def createGovernment(self, taxRate: float):
+        self.government = Government(taxRate)
 
     def createHouseholds(self):
         for i in range(self.numberOfHouseholds):
@@ -184,6 +197,7 @@ class App:
             goodsBias = random.uniform(1.0, 10.0)
             name = f'Firm{i + 1}'
             self.firms.append(Firm(name, money, wage, negotiationVal, bias, goodsBias))
+    
 
     def saveHouseholds(self, dataSet, day, income, goods, land, labour, capital):
         data = {'DataSet': dataSet, 'Day': day, 'Income': income, 'Goods': goods, 'Land': land, 'Labour': labour, 'Capital': capital}
@@ -202,8 +216,24 @@ class App:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
             writer.writerow(data)
+            
+    def saveGovernment(self, day, taxRate, taxRevenue):
+        data = {'Day': day, 'TaxRate': taxRate, 'TaxRevenue': taxRevenue}
+        
+        with open('data/government.csv', 'a', newline='') as csvfile:
+            fieldnames = ['Day', 'TaxRate', 'TaxRevenue']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writerow(data)
+
+        
     
     def writeHeaders(self):
+        with open ('data/government.csv', 'w', newline='') as csvfile:
+            fieldnames = ['Day', 'TaxRate', 'TaxRevenue']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            
         with open('data/households.csv', 'w', newline='') as csvfile:
             fieldnames = ['DataSet', 'Day', 'Income', 'Goods', 'Land', 'Labour', 'Capital']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -216,21 +246,25 @@ class App:
 
 
 
-mainApp = App(10, 10, 360)
+mainApp = App(10, 10)
+mainApp.createGovernment(100.0)
 mainApp.createHouseholds()
 mainApp.createFirms()
 
-simulation = Simulation(mainApp.households, mainApp.firms)
+simulation = Simulation(mainApp.households, mainApp.firms, mainApp.government)
 
 mainApp.writeHeaders()
 
-for day in range(360):
+duration = 360
+
+for day in range(duration):
     simulation.step()
 
     for i, household in enumerate(simulation.households):
         mainApp.saveHouseholds(simulation.households[i].name, day + 1, simulation.households[i].income, simulation.households[i].goods, simulation.households[i].land, simulation.households[i].labour, simulation.households[i].capital)
     for i, firm in enumerate(simulation.firms):
-        mainApp.saveFirms(simulation.firms[i].name, day + 1, simulation.firms[i].money, simulation.firms[i].goods, simulation.firms[i].goodsP, simulation.firms[i].land, simulation.firms[i].labour, simulation.firms[i].capital)
+        mainApp.saveFirms(simulation.firms[i].name, day + 1, simulation.firms[i].money, simulation.firms[i].goods, simulation.firms[i].goodsPrice, simulation.firms[i].land, simulation.firms[i].labour, simulation.firms[i].capital)
+    mainApp.saveGovernment(day + 1, simulation.government.tax_rate, simulation.government.tax_revenue)
     
     print('---')
 

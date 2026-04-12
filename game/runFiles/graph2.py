@@ -97,6 +97,20 @@ class Graph:
             axis[1, 0].legend()
             axis[1, 1].legend()
             axis[1, 2].legend()
+    
+    def graphGovernment(self, governmentData: pd.DataFrame, legend: bool):
+        self.Governmentfigure, axis = plt.subplots(1, 2)
+        plt.tight_layout(pad=3.0)
+        
+        axis[0].plot(governmentData['Day'], governmentData['TaxRate'], label='Tax Rate')
+        axis[1].plot(governmentData['Day'], governmentData['TaxRevenue'], label='Tax Revenue')
+
+        axis[0].set_title("Government Tax Rate Over Time")
+        axis[1].set_title("Government Tax Revenue Over Time")
+
+        if legend:
+            axis[0].legend()
+            axis[1].legend()
 
 
 
